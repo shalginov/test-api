@@ -1,6 +1,7 @@
 import pytest
 import requests
 
+
 def test_get_random_brewery():
     res = requests.get('https://api.openbrewerydb.org/v1/breweries/random')
     assert res.status_code == 200
@@ -20,6 +21,7 @@ list_brewery_ids = [
     "11074879-0fa1-4bbb-956e-d3d00a47262b"
 ]
 
+
 @pytest.mark.parametrize("brewery_id", list_brewery_ids)
 def test_get_brewery_by_id(brewery_id):
     url = f'https://api.openbrewerydb.org/v1/breweries?by_ids={brewery_id}'
@@ -27,11 +29,13 @@ def test_get_brewery_by_id(brewery_id):
     assert res.status_code == 200
     assert res.json()[0]['id'] == brewery_id
 
+
 def test_get_list_breweries_by_ids():
     payload = ','.join(list_brewery_ids)
     res = requests.get(f'https://api.openbrewerydb.org/v1/breweries?by_ids={payload}')
     assert res.status_code == 200
     assert len(res.json()) == len(list_brewery_ids)
+
 
 list_brewery_cities = [
     "South Haven",
@@ -46,10 +50,12 @@ list_brewery_cities = [
     "Chico"
 ]
 
+
 @pytest.mark.parametrize('city', list_brewery_cities)
 def test_search_breweries_by_city(city):
-    res = requests.get('https://api.openbrewerydb.org/v1/breweries/search', params={'query' : city} )
+    res = requests.get('https://api.openbrewerydb.org/v1/breweries/search', params={'query': city})
     assert res.status_code == 200
+    assert res.json()[0]['city'] == city
 
 
 list_brewery_names = [
@@ -65,7 +71,9 @@ list_brewery_names = [
     "Ass Clown Brewing Co"
 ]
 
+
 @pytest.mark.parametrize('name', list_brewery_names)
 def test_metadata_breweries_by_name(name):
-    res = requests.get('https://api.openbrewerydb.org/v1/breweries/meta', params={'by_name' : name})
+    res = requests.get('https://api.openbrewerydb.org/v1/breweries/meta', params={'by_name': name})
     assert res.status_code == 200
+    assert bool(res.json())

@@ -35,11 +35,13 @@ list_datas = [
     }
 ]
 
+
 def test_get_random_post():
-    rnd = random.randrange(1,100)
+    rnd = random.randrange(1, 100)
     res = requests.get(f'https://jsonplaceholder.typicode.com/posts/{rnd}')
     assert res.status_code == 200
     assert res.json()['id'] == rnd
+
 
 @pytest.mark.parametrize('data', list_datas)
 def test_create_post(data):
@@ -47,9 +49,10 @@ def test_create_post(data):
     assert res.status_code == 201
     assert bool(res.json()['id']) == True
 
+
 @pytest.mark.parametrize('data', list_datas)
 def test_update_post(data):
-    post_number = random.randrange(1,100)
+    post_number = random.randrange(1, 100)
     data_with_post_number = {
         'id': post_number,
         'title': data['title'],
@@ -60,9 +63,13 @@ def test_update_post(data):
     assert res.status_code == 200
     assert bool(res.json()['id']) == True
 
+    res_upd = requests.get(f'https://jsonplaceholder.typicode.com/posts/{post_number}')
+    assert res_upd.json() == data_with_post_number
+
+
 @pytest.mark.parametrize('data', list_datas)
 def test_patch_post(data):
-    post_number = random.randrange(1,100)
+    post_number = random.randrange(1, 100)
     data_to_patch = {
         'title': data['title']
     }
@@ -70,7 +77,8 @@ def test_patch_post(data):
     assert res.status_code == 200
     assert bool(res.json()['title']) == True
 
+
 def test_delete_post():
-    post_number = random.randrange(1,100)
+    post_number = random.randrange(1, 100)
     res = requests.delete(f'https://jsonplaceholder.typicode.com/posts/{post_number}')
     assert res.status_code == 200
